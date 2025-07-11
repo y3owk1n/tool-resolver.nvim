@@ -30,6 +30,9 @@ FEATURES                      *tool-resolver.nvim-tool-resolver.nvim-features*
 - Lightweight, dependency-free
 
 
+  [!NOTE] This plugin only supports node projects at this moment, as the
+  detection are hard-coded to work with `node_modules/.bin/<tool>`.
+
 HOW IT WORKS              *tool-resolver.nvim-tool-resolver.nvim-how-it-works*
 
 When resolving a tool (e.g. `biome`), this plugin:
