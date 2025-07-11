@@ -17,7 +17,7 @@ Resolve project-local CLI tools in Neovim with monorepo-aware logic. (Only for n
 When resolving a tool (e.g. `biome`), this plugin:
 
 1. Starts at the file's directory
-2. Traverses upward to find the nearest executable at `node_modules/.bin/<tool>`
+2. Traverses upward to find the nearest executable at `node_modules/.bin/biome`
 3. If none is found, tries the same logic from `vim.fn.getcwd()` (monorepo root fallback)
 4. If still not found, falls back to the fallbacks tool name specified in configuration or the global tool name (e.g. "biome")
 
