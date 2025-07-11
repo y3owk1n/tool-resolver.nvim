@@ -12,6 +12,9 @@ Resolve project-local CLI tools in Neovim with monorepo-aware logic. (Only for n
 - Smart per-buffer resolution (works as you switch files)
 - Lightweight, dependency-free
 
+> [!NOTE]
+> This plugin only supports node projects at this moment, as the detection are hard-coded to work with `node_modules/.bin/<tool>`.
+
 ## 🧠 How It Works
 
 When resolving a tool (e.g. `biome`), this plugin:
