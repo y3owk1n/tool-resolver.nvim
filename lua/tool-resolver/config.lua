@@ -1,5 +1,7 @@
 local M = {}
 
+---User-provided config, merged with defaults
+---@type ToolResolver.Config
 M.config = {}
 
 ---@type ToolResolver.Config
@@ -7,9 +9,9 @@ local defaults = {
 	fallbacks = {},
 }
 
---- Setup autocommands
----@return nil
-function M.setup_autocmds()
+--- Setup autocmds to automatically resolve tools
+---@private
+local function setup_autocmds()
 	vim.api.nvim_create_autocmd("DirChanged", {
 		callback = function()
 			require("tool-resolver.cache").clear()
@@ -29,16 +31,26 @@ function M.setup_autocmds()
 	})
 end
 
---- Setup user commands
----@return nil
-function M.setup_usercmds()
-	-- Command: :ToolResolverGet biome
+--- Setup user commands for manual control
+---@private
+local function setup_usercmds()
 	vim.api.nvim_create_user_command("ToolResolverGet", function(opts)
 		local tool = opts.args
 		local path = vim.api.nvim_buf_get_name(0)
-		local resolved =
-			require("tool-resolver.tools").get_bin(tool, { path = path })
-		vim.notify(("Resolved tool '%s': %s"):format(tool, resolved))
+
+		local ok, resolved =
+			pcall(require("tool-resolver.tools").get_bin, tool, { path = path })
+		if ok and resolved then
+			vim.notify(
+				("✅ Resolved tool '%s': %s"):format(tool, resolved),
+				vim.log.levels.INFO
+			)
+		else
+			vim.notify(
+				("❌ Failed to resolve tool '%s'"):format(tool),
+				vim.log.levels.WARN
+			)
+		end
 	end, {
 		nargs = 1,
 		complete = function(arg)
@@ -53,27 +65,24 @@ function M.setup_usercmds()
 		end,
 	})
 
-	-- Command: :ToolResolverClearCache
 	vim.api.nvim_create_user_command("ToolResolverClearCache", function()
 		require("tool-resolver.cache").clear()
-		vim.notify("Cache cleared")
+		vim.notify("🧹 Tool resolver cache cleared", vim.log.levels.INFO)
 	end, {})
 
-	-- Command: :ToolResolverGetCache
 	vim.api.nvim_create_user_command("ToolResolverGetCache", function()
 		local cache = require("tool-resolver.cache").get()
-		vim.notify(vim.inspect(cache))
+		vim.notify(vim.inspect(cache), vim.log.levels.INFO)
 	end, {})
 end
 
---- Setup Time Machine
----@param user_config ToolResolver.Config
----@return nil
+--- Plugin setup entry point
+---@param user_config? ToolResolver.Config
 function M.setup(user_config)
 	M.config = vim.tbl_deep_extend("force", defaults, user_config or {})
 
-	M.setup_autocmds()
-	M.setup_usercmds()
+	setup_autocmds()
+	setup_usercmds()
 end
 
 return M
