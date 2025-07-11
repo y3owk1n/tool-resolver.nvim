@@ -1,0 +1,177 @@
+*tool-resolver.nvim.txt*     For Neovim >= 0.11.0    Last change: 2025 July 11
+
+==============================================================================
+Table of Contents                       *tool-resolver.nvim-table-of-contents*
+
+1. tool-resolver.nvim                  |tool-resolver.nvim-tool-resolver.nvim|
+  - Features                  |tool-resolver.nvim-tool-resolver.nvim-features|
+  - How It Works          |tool-resolver.nvim-tool-resolver.nvim-how-it-works|
+  - Installation          |tool-resolver.nvim-tool-resolver.nvim-installation|
+  - Configuration        |tool-resolver.nvim-tool-resolver.nvim-configuration|
+  - Quick Start            |tool-resolver.nvim-tool-resolver.nvim-quick-start|
+  - API                            |tool-resolver.nvim-tool-resolver.nvim-api|
+
+==============================================================================
+1. tool-resolver.nvim                  *tool-resolver.nvim-tool-resolver.nvim*
+
+Resolve project-local CLI tools in Neovim with monorepo-aware logic. (Only for
+node projects, extremely useful for tools like `biome` or `prettier`)
+
+
+  No `plenary`, no guesswork — just fast, reliable resolution of
+  `node_modules/.bin/<tool>` per buffer.
+
+FEATURES                      *tool-resolver.nvim-tool-resolver.nvim-features*
+
+- Monorepo-friendly: climbs up directory tree to find local binaries
+- Falls back to monorepo root if needed
+- Global fallback to system binary if no local match
+- Smart per-buffer resolution (works as you switch files)
+- Lightweight, dependency-free
+
+
+HOW IT WORKS              *tool-resolver.nvim-tool-resolver.nvim-how-it-works*
+
+When resolving a tool (e.g. `biome`), this plugin:
+
+1. Starts at the file’s directory
+2. Traverses upward to find the nearest executable at `node_modules/.bin/<tool>`
+3. If none is found, tries the same logic from `vim.fn.getcwd()` (monorepo root fallback)
+4. If still not found, falls back to the fallbacks tool name specified in configuration or the global tool name (e.g. "biome")
+
+
+INSTALLATION              *tool-resolver.nvim-tool-resolver.nvim-installation*
+
+Using lazy.nvim <https://github.com/folke/lazy.nvim>
+
+>lua
+    -- tool-resolver.lua
+    return {
+     "y3owk1n/tool-resolver.nvim",
+     version = "*", -- remove this if you want to use the `main` branch
+     opts = {
+      -- your configuration comes here
+      -- or leave it empty to use the default settings
+      -- refer to the configuration section below
+     }
+    }
+<
+
+Ifyou are using other package managers you need to call `setup`
+
+>lua
+    require("tool-resolver").setup({
+      -- your configuration
+    })
+<
+
+
+REQUIREMENTS ~
+
+- Neovim0.11+ with Lua support
+
+
+CONFIGURATION            *tool-resolver.nvim-tool-resolver.nvim-configuration*
+
+The default configurations are as below.
+
+
+DEFAULT OPTIONS ~
+
+>lua
+    ---@type ToolResolver.Config
+    {
+     fallbacks = {},
+    }
+<
+
+
+TYPE DEFINITIONS ~
+
+>lua
+    ---@class ToolResolver.Config
+    ---@field fallbacks? table<string, string> Custom fallbacks, otherwise uses it's name
+<
+
+
+QUICK START                *tool-resolver.nvim-tool-resolver.nvim-quick-start*
+
+See the example below for how to configure **tool-resolver.nvim**.
+
+>lua
+    {
+     "y3owk1n/tool-resolver.nvim",
+     cmd = {
+      "ToolResolverGet",
+      "ToolResolverClearCache",
+      "ToolResolverGetCache",
+     },
+     ---@type ToolResolver.Config
+     opts = {
+       fallbacks = {
+        biome = "biome",
+        prettier = "prettierd", -- this is an example of a custom fallback, instead of fallback to `prettier`, fallback to `prettierd` instead.
+       },
+     },
+    },
+<
+
+You can then use the following to resolve a tool anywhere. For example in my
+biome LSP config:
+
+>lua
+    local tr = require("tool-resolver.tools")
+    
+    ---@type vim.lsp.Config
+    return {
+     cmd = { tr.get_bin("biome"), "lsp-proxy" }, -- instead of just getting it from the global bin, use tool-resolver for it.
+     -- the rest of your lsp configurations
+    }
+<
+
+And then wherever you call `vim.lsp.enable(<lsp>)`, you can also add another
+line for it to work properly, for example:
+
+>lua
+    local tr = require("tool-resolver.tools")
+    
+    vim.lsp.enable("biome")
+    tr.add("biome") -- this is just an example, you can add this to the plugin init or config initialization function too.
+<
+
+
+API                                *tool-resolver.nvim-tool-resolver.nvim-api*
+
+**tool-resolver.nvim** provides the following api functions that you can use
+for different things:
+
+
+GET THE LOCAL OR GLOBAL TOOL BIN ~
+
+This is the most important function in **tool-resolver.nvim**. It will try to
+resolve the tool bin from the current buffer to the node modules available
+binary, and only fallback to the globally installed version.
+
+>lua
+    ---@param tool string
+    ---@param opts? ToolResolver.GetBinOpts
+    ---@return string
+    require("tool-resolver.tools").get_bin(tool, opts)
+<
+
+
+ADD A TOOL TO THE LIST OF TOOLS ~
+
+This function is used to add a tool to the list of tools context. This is
+required for the plugin to run autocmd when changing path or querying
+information.
+
+>lua
+    ---@param tool string tool name to add, e.g. `biome`
+    ---@return string
+    require("tool-resolver.tools").add(tool)
+<
+
+Generated by panvimdoc <https://github.com/kdheepak/panvimdoc>
+
+vim:tw=78:ts=8:noet:ft=help:norl:

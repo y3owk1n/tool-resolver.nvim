@@ -1,4 +1,4 @@
-# 🧰 time-machine.nvim
+# 🧰 tool-resolver.nvim
 
 Resolve project-local CLI tools in Neovim with monorepo-aware logic. (Only for node projects, extremely useful for tools like `biome` or `prettier`)
 
@@ -38,7 +38,7 @@ When resolving a tool (e.g. `biome`), this plugin:
 Using [lazy.nvim](https://github.com/folke/lazy.nvim):
 
 ```lua
--- time-machine.lua
+-- tool-resolver.lua
 return {
  "y3owk1n/tool-resolver.nvim",
  version = "*", -- remove this if you want to use the `main` branch
