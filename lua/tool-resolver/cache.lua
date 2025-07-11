@@ -1,32 +1,43 @@
 local M = {}
 
-local cache = {}
+-- Internal binary cache table, do not modify directly
+local _cache = {}
 
----@param root? string
----@param tool string
----@return string
+---Generate a normalized cache key for a tool with optional root
+---@param root? string # Optional project root (or nil for global)
+---@param tool string # Tool name (e.g., "eslint", "prettier")
+---@return string # Normalized cache key
 function M.get_key(root, tool)
 	return (root or "__NO_ROOT__") .. ":" .. tool
 end
 
+---Get a shallow copy of the entire cache (read-only)
+---@return table<string, string> # Copy of internal cache table
 function M.get()
-	return cache
+	local copy = {}
+	for k, v in pairs(_cache) do
+		copy[k] = v
+	end
+	return copy
 end
 
----@param key string
----@return string?
+---Get a cached binary path by key
+---@param key string # Cache key
+---@return string|nil # Cached binary path, or nil if not found
 function M.get_by_key(key)
-	return cache[key]
+	return _cache[key]
 end
 
----@param key string
----@param bin string
+---Set a binary path for the given key
+---@param key string # Cache key
+---@param bin string # Resolved binary path
 function M.set(key, bin)
-	cache[key] = bin
+	_cache[key] = bin
 end
 
+---Clear the entire binary cache
 function M.clear()
-	cache = {}
+	_cache = {}
 end
 
 return M
