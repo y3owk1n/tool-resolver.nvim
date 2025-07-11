@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/y3owk1n/tool-resolver.nvim/compare/v1.0.0...v1.0.1) (2025-07-11)
+
+
+### Bug Fixes
+
+* add more annotations for maintainability ([#5](https://github.com/y3owk1n/tool-resolver.nvim/issues/5)) ([72ca302](https://github.com/y3owk1n/tool-resolver.nvim/commit/72ca3028c532d1e8cef445baf3c1feebdc5ec9a7))
+
 ## 1.0.0 (2025-07-11)
 
 
