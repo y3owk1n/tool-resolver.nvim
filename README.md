@@ -1,6 +1,6 @@
 # 🧰 tool-resolver.nvim
 
-Resolve project-local CLI tools in Neovim with monorepo-aware logic.
+Resolve project-local CLI tools in Neovim with monorepo-aware logic. Say bye to version mismatches!
 
 <!-- panvimdoc-ignore-start -->
 
