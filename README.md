@@ -135,7 +135,7 @@ See the example below for how to configure **tool-resolver.nvim**.
 You can then use the following to resolve a tool anywhere. For example in my biome LSP config:
 
 ```lua
-local tr = require("tool-resolver.tools")
+local tr = require("tool-resolver")
 
 ---@type vim.lsp.Config
 return {
@@ -159,7 +159,7 @@ This is the most important function in **tool-resolver.nvim**. It will try to re
 ---@param tool string
 ---@param opts? ToolResolver.GetBinOpts
 ---@return string
-require("tool-resolver.tools").get_bin(tool, opts)
+require("tool-resolver").get_bin(tool, opts)
 ```
 
 <!-- panvimdoc-ignore-start -->
