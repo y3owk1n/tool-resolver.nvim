@@ -42,12 +42,15 @@ local function setup_usercmds()
 			pcall(require("tool-resolver.tools").get_bin, tool, { path = path })
 		if ok and resolved then
 			vim.notify(
-				("✅ Resolved tool '%s': %s"):format(tool, resolved),
+				("[ToolResolver]: Resolved tool '%s': %s"):format(
+					tool,
+					resolved
+				),
 				vim.log.levels.INFO
 			)
 		else
 			vim.notify(
-				("❌ Failed to resolve tool '%s'"):format(tool),
+				("[ToolResolver]: Failed to resolve tool '%s'"):format(tool),
 				vim.log.levels.WARN
 			)
 		end
@@ -67,12 +70,18 @@ local function setup_usercmds()
 
 	vim.api.nvim_create_user_command("ToolResolverClearCache", function()
 		require("tool-resolver.cache").clear()
-		vim.notify("🧹 Tool resolver cache cleared", vim.log.levels.INFO)
+		vim.notify(
+			"[ToolResolver]: Tool resolver cache cleared",
+			vim.log.levels.INFO
+		)
 	end, {})
 
 	vim.api.nvim_create_user_command("ToolResolverGetCache", function()
 		local cache = require("tool-resolver.cache").get()
-		vim.notify(vim.inspect(cache), vim.log.levels.INFO)
+		vim.notify(
+			"[ToolResolver]: Cached data:\n" .. vim.inspect(cache),
+			vim.log.levels.INFO
+		)
 	end, {})
 end
 
