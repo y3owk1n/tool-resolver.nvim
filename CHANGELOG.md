@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.1.0](https://github.com/y3owk1n/tool-resolver.nvim/compare/v1.0.1...v1.1.0) (2025-07-12)
+
+
+### Features
+
+* remove `tools.add` API and setup the tools automatically on setup ([#8](https://github.com/y3owk1n/tool-resolver.nvim/issues/8)) ([a032aa6](https://github.com/y3owk1n/tool-resolver.nvim/commit/a032aa6c39b4c89bbfa1cbe5098ccb9744076b99))
+
+
+### Bug Fixes
+
+* prefix `vim.notify` with `[ToolResolver]: ` ([#11](https://github.com/y3owk1n/tool-resolver.nvim/issues/11)) ([b02581e](https://github.com/y3owk1n/tool-resolver.nvim/commit/b02581e032114f2e875180677d71185433a5c726))
+* **tools:** check if the requested tools is registered, if not just notify and resolve the same name ([#10](https://github.com/y3owk1n/tool-resolver.nvim/issues/10)) ([526f459](https://github.com/y3owk1n/tool-resolver.nvim/commit/526f459b4013a70dc8181f5c4350dc3be1a8ad29))
+
 ## [1.0.1](https://github.com/y3owk1n/tool-resolver.nvim/compare/v1.0.0...v1.0.1) (2025-07-11)
 
 
