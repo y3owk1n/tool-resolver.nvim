@@ -65,11 +65,11 @@ function M.get_bin(tool, opts)
 	end
 
 	-- Try resolving from buffer path
-	local bin, root = resolver.find_nearest_executable(tool, buf_path)
+	local bin, root = resolver.resolve(tool, buf_path)
 
 	-- Fallback to cwd resolution if not found
 	if not bin then
-		bin, root = resolver.find_nearest_executable(tool, vim.fn.getcwd())
+		bin, root = resolver.resolve(tool, vim.fn.getcwd())
 	end
 
 	if root then

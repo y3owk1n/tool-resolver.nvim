@@ -8,7 +8,7 @@ local utils = require("tool-resolver.utils")
 ---@param start_path string Starting path for upward search
 ---@return string? bin_path The resolved binary path if found
 ---@return string? root_path The project root where the binary was found
-function M.find_nearest_executable(tool, start_path)
+function M.resolve(tool, start_path)
 	local dir = vim.fn.fnamemodify(start_path, ":p"):gsub("/+$", "")
 
 	while dir and dir ~= "/" do
