@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/y3owk1n/tool-resolver.nvim/compare/v1.1.0...v1.1.1) (2025-07-12)
+
+
+### Bug Fixes
+
+* force release ([#14](https://github.com/y3owk1n/tool-resolver.nvim/issues/14)) ([499c372](https://github.com/y3owk1n/tool-resolver.nvim/commit/499c3729a86bcfab18c4916b19901f82e248fbc0))
+
 ## [1.1.0](https://github.com/y3owk1n/tool-resolver.nvim/compare/v1.0.1...v1.1.0) (2025-07-12)
 
 
