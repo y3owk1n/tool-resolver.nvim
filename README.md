@@ -1,8 +1,6 @@
 # 🧰 tool-resolver.nvim
 
-Resolve project-local CLI tools in Neovim with monorepo-aware logic. (Only for node projects, extremely useful for tools like `biome` or `prettier`)
-
-> No `plenary`, no guesswork — just fast, reliable resolution of `node_modules/.bin/<tool>` per buffer.
+Resolve project-local CLI tools in Neovim with monorepo-aware logic.
 
 <!-- panvimdoc-ignore-start -->
 
@@ -30,14 +28,14 @@ While tools like mason.nvim are great, they typically install the latest version
 - Lightweight, dependency-free
 
 > [!NOTE]
-> This plugin only supports node projects at this moment, as the detection are hard-coded to work with `node_modules/.bin/<tool>`.
+> This plugin currently only supports node projects, feel free to contribute for more language resolvers if this plugin interests you.
 
 ## 🧠 How It Works
 
 When resolving a tool (e.g. `biome`), this plugin:
 
 1. Starts at the file's directory
-2. Traverses upward to find the nearest executable at `node_modules/.bin/biome`
+2. Traverses upward to find the nearest executable based on configured type, for `node` it will be at `node_modules/.bin/biome`
 3. If none is found, tries the same logic from `vim.fn.getcwd()` (monorepo root fallback)
 4. If still not found, falls back to the fallbacks tool name specified in configuration or the global tool name (e.g. "biome")
 
@@ -91,7 +89,7 @@ The default configurations are as below.
 ```lua
 ---@type ToolResolver.Config
 {
- fallbacks = {},
+ tools = {},
 }
 ```
 
@@ -99,7 +97,11 @@ The default configurations are as below.
 
 ```lua
 ---@class ToolResolver.Config
----@field fallbacks? table<string, string> Register fallbacks here
+---@field tools table<string, ToolResolver.Config.Tools> tools with type and fallback
+
+---@class ToolResolver.Config.Tools
+---@field type ToolResolver.ResolverType
+---@field fallback? string fallback binary name, if not specified then use the key.
 ```
 
 ## 🚀 Quick Start
@@ -116,10 +118,15 @@ See the example below for how to configure **tool-resolver.nvim**.
  },
  ---@type ToolResolver.Config
  opts = {
-   -- register the fallbacks that you want to use here
-   fallbacks = {
-    biome = "biome",
-    prettier = "prettierd", -- this is an example of a custom fallback, instead of fallback to `prettier`, fallback to `prettierd` instead.
+   -- register the tools that you want to use here
+   tools = {
+    biome = {
+     type = "node", -- type is required, and only "node" is supported for now
+    },
+    prettier = {
+     type = "node", -- type is required, and only "node" is supported for now
+     fallback = "prettierd", -- specify a fallback binary name will resolve to this, else will fallback to the key `prettier`
+    },
    },
  },
 },
@@ -128,7 +135,7 @@ See the example below for how to configure **tool-resolver.nvim**.
 You can then use the following to resolve a tool anywhere. For example in my biome LSP config:
 
 ```lua
-local tr = require("tool-resolver.tools")
+local tr = require("tool-resolver")
 
 ---@type vim.lsp.Config
 return {
@@ -146,10 +153,13 @@ return {
 This is the most important function in **tool-resolver.nvim**. It will try to resolve the tool bin from the current buffer to the node modules available binary, and only fallback to the globally installed version.
 
 ```lua
+---@class ToolResolver.GetBinOpts
+---@field path? string start search path (default: current buffer)
+
 ---@param tool string
 ---@param opts? ToolResolver.GetBinOpts
 ---@return string
-require("tool-resolver.tools").get_bin(tool, opts)
+require("tool-resolver").get_bin(tool, opts)
 ```
 
 <!-- panvimdoc-ignore-start -->
