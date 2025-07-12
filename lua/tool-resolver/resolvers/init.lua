@@ -7,15 +7,15 @@ local resolvers = {
 local tools = require("tool-resolver.tools")
 local cache = require("tool-resolver.cache")
 
--- Resolving tools for specified types. The tool will try to resolve the binary from the current buffer to
--- based on the provided type with an available binary, and only fallback to the globally installed version.
+---Resolving tools for specified types. The tool will try to resolve the binary from the current buffer path,
+---then from cwd if not found, and finally fallback to the configured fallback or tool name.
 ---@param tool string Tool name
 ---@param opts? ToolResolver.GetBinOpts Options (e.g., buffer path)
 ---@return string Resolved binary path or fallback name
 function M.get_bin(tool, opts)
-	local tools_list = tools.get()
+	local tools_table = tools.get()
 
-	local registered = tools_list[tool]
+	local registered = tools_table[tool]
 
 	if not registered then
 		vim.notify(
@@ -29,9 +29,9 @@ function M.get_bin(tool, opts)
 
 	if not registered.type then
 		vim.notify(
-			"[ToolResolver]: Tool not registered: "
+			"[ToolResolver]: Tool '"
 				.. tool
-				.. ", no type specified",
+				.. "' is missing required 'type' field",
 			vim.log.levels.WARN
 		)
 		return tool
@@ -57,6 +57,13 @@ function M.get_bin(tool, opts)
 
 	local fallback = registered.fallback or tool
 
+	local key = cache.get_key(nil, tool)
+	local cachedTool = cache.get_by_key(key)
+
+	if cachedTool then
+		return cachedTool
+	end
+
 	-- Try resolving from buffer path
 	local bin, root = resolver.find_nearest_executable(tool, buf_path)
 
@@ -65,11 +72,8 @@ function M.get_bin(tool, opts)
 		bin, root = resolver.find_nearest_executable(tool, vim.fn.getcwd())
 	end
 
-	local key = cache.get_key(root, tool)
-	local cachedTool = cache.get_by_key(key)
-
-	if cachedTool then
-		return cachedTool
+	if root then
+		key = cache.get_key(root, tool)
 	end
 
 	-- Cache and return resolved path

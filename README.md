@@ -28,7 +28,7 @@ While tools like mason.nvim are great, they typically install the latest version
 - Lightweight, dependency-free
 
 > [!NOTE]
-> This plugin only supports node projects at this moment, feel free to contribute for more language resolvers if this plugin interests you.
+> This plugin currently only supports node projects, feel free to contribute for more language resolvers if this plugin interests you.
 
 ## 🧠 How It Works
 
@@ -125,7 +125,7 @@ See the example below for how to configure **tool-resolver.nvim**.
     },
     prettier = {
      type = "node", -- type is required, and only "node" is supported for now
-     fallback = "prettierd", -- specifify a fallback binary name will resolve to this, else will fallback to the key `prettier`
+     fallback = "prettierd", -- specify a fallback binary name will resolve to this, else will fallback to the key `prettier`
     },
    },
  },

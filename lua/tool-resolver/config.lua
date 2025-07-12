@@ -22,9 +22,9 @@ local function setup_autocmds()
 		callback = function(args)
 			local path = vim.api.nvim_buf_get_name(args.buf)
 
-			local tools_list = require("tool-resolver.tools").get()
+			local tools_table = require("tool-resolver.tools").get()
 
-			for _, tool in ipairs(tools_list) do
+			for _, tool in ipairs(tools_table) do
 				require("tool-resolver").get_bin(tool, { path = path })
 			end
 		end,
@@ -38,8 +38,8 @@ local function setup_usercmds()
 		local tool = opts.args
 		local path = vim.api.nvim_buf_get_name(0)
 
-		local tools_list = require("tool-resolver.tools").get()
-		local registered = tools_list[tool]
+		local tools_table = require("tool-resolver.tools").get()
+		local registered = tools_table[tool]
 
 		if not registered then
 			vim.notify(
@@ -72,12 +72,10 @@ local function setup_usercmds()
 	end, {
 		nargs = 1,
 		complete = function(arg)
-			return vim.iter(require("tool-resolver.tools").get())
-				:map(function(tool)
-					return tool
-				end)
-				:filter(function(tool)
-					return tool:sub(1, #arg) == arg
+			local tools = require("tool-resolver.tools").get()
+			return vim.iter(vim.tbl_keys(tools))
+				:filter(function(name)
+					return name:sub(1, #arg) == arg
 				end)
 				:totable()
 		end,
