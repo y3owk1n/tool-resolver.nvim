@@ -29,6 +29,18 @@ end
 ---@param opts? ToolResolver.GetBinOpts Options (e.g., buffer path)
 ---@return string Resolved binary path or fallback name
 function M.get_bin(tool, opts)
+	local registered = utils.contains(tools, tool)
+
+	if not registered then
+		vim.notify(
+			"[ToolResolver]: Tool not registered: "
+				.. tool
+				.. ", resolving to the same name",
+			vim.log.levels.WARN
+		)
+		return tool
+	end
+
 	opts = opts or {}
 
 	-- Determine buffer path (fallback to cwd)
