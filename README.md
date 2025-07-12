@@ -82,7 +82,7 @@ The default configurations are as below.
 
 ```lua
 ---@class ToolResolver.Config
----@field fallbacks? table<string, string> Custom fallbacks, otherwise uses it's name
+---@field fallbacks? table<string, string> Register fallbacks here
 ```
 
 ## 🚀 Quick Start
@@ -99,6 +99,7 @@ See the example below for how to configure **tool-resolver.nvim**.
  },
  ---@type ToolResolver.Config
  opts = {
+   -- register the fallbacks that you want to use here
    fallbacks = {
     biome = "biome",
     prettier = "prettierd", -- this is an example of a custom fallback, instead of fallback to `prettier`, fallback to `prettierd` instead.
@@ -119,15 +120,6 @@ return {
 }
 ```
 
-And then wherever you call `vim.lsp.enable(<lsp>)`, you can also add another line for it to work properly, for example:
-
-```lua
-local tr = require("tool-resolver.tools")
-
-vim.lsp.enable("biome")
-tr.add("biome") -- this is just an example, you can add this to the plugin init or config initialization function too.
-```
-
 ## 🌎 API
 
 **tool-resolver.nvim** provides the following api functions that you can use for different things:
@@ -141,16 +133,6 @@ This is the most important function in **tool-resolver.nvim**. It will try to re
 ---@param opts? ToolResolver.GetBinOpts
 ---@return string
 require("tool-resolver.tools").get_bin(tool, opts)
-```
-
-### Add a tool to the list of tools
-
-This function is used to add a tool to the list of tools context. This is required for the plugin to run autocmd when changing path or querying information.
-
-```lua
----@param tool string tool name to add, e.g. `biome`
----@return string
-require("tool-resolver.tools").add(tool)
 ```
 
 <!-- panvimdoc-ignore-start -->

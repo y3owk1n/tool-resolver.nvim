@@ -83,6 +83,8 @@ function M.setup(user_config)
 
 	setup_autocmds()
 	setup_usercmds()
+
+	require("tool-resolver.tools").setup(M.config.fallbacks)
 end
 
 return M
