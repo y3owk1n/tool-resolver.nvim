@@ -6,7 +6,7 @@ M.config = {}
 
 ---@type ToolResolver.Config
 local defaults = {
-	fallbacks = {},
+	tools = {},
 }
 
 --- Setup autocmds to automatically resolve tools
@@ -22,10 +22,10 @@ local function setup_autocmds()
 		callback = function(args)
 			local path = vim.api.nvim_buf_get_name(args.buf)
 
-			local tools = require("tool-resolver.tools").get()
+			local tools_list = require("tool-resolver.tools").get()
 
-			for _, tool in ipairs(tools) do
-				require("tool-resolver.tools").get_bin(tool, { path = path })
+			for _, tool in ipairs(tools_list) do
+				require("tool-resolver").get_bin(tool, { path = path })
 			end
 		end,
 	})
@@ -38,8 +38,23 @@ local function setup_usercmds()
 		local tool = opts.args
 		local path = vim.api.nvim_buf_get_name(0)
 
+		local tools_list = require("tool-resolver.tools").get()
+		local registered = tools_list[tool]
+
+		if not registered then
+			vim.notify(
+				(
+					"[ToolResolver]: Tool not registered: "
+					.. tool
+					.. ", resolving to the same name"
+				),
+				vim.log.levels.WARN
+			)
+			return
+		end
+
 		local ok, resolved =
-			pcall(require("tool-resolver.tools").get_bin, tool, { path = path })
+			pcall(require("tool-resolver").get_bin, tool, { path = path })
 		if ok and resolved then
 			vim.notify(
 				("[ToolResolver]: Resolved tool '%s': %s"):format(
@@ -92,8 +107,6 @@ function M.setup(user_config)
 
 	setup_autocmds()
 	setup_usercmds()
-
-	require("tool-resolver.tools").setup(M.config.fallbacks)
 end
 
 return M

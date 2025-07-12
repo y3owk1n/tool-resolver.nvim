@@ -3,7 +3,7 @@ local M = {}
 ---Join multiple path segments safely and normalize the result
 ---@param ... string Path parts to join
 ---@return string Normalized absolute path
-local function join(...)
+function M.join(...)
 	local args = { ... }
 	local result = args[1]:gsub("/+$", "")
 
@@ -18,33 +18,8 @@ end
 ---Check if the given path is both readable and executable
 ---@param path string path to check
 ---@return boolean
-local function is_executable(path)
+function M.is_executable(path)
 	return vim.fn.filereadable(path) == 1 and vim.fn.executable(path) == 1
-end
-
----Find the nearest executable binary in node_modules/.bin
----Searches upward from a starting path
----@param tool string Tool name (e.g., "biome")
----@param start_path string Starting path for upward search
----@return string? bin_path The resolved binary path if found
----@return string? root_path The project root where the binary was found
-function M.find_nearest_executable(tool, start_path)
-	local dir = vim.fn.fnamemodify(start_path, ":p"):gsub("/+$", "")
-
-	while dir and dir ~= "/" do
-		local candidate = join(dir, "node_modules", ".bin", tool)
-		if is_executable(candidate) then
-			return candidate, dir
-		end
-
-		local parent = vim.fn.fnamemodify(dir, ":h")
-		if parent == dir then
-			break -- prevent infinite loop
-		end
-		dir = parent:gsub("/+$", "")
-	end
-
-	return nil, nil
 end
 
 ---Add unique items to a list-like table
