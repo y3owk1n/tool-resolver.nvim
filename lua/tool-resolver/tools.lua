@@ -8,10 +8,12 @@ local utils = require("tool-resolver.utils")
 local cache = require("tool-resolver.cache")
 local config = require("tool-resolver.config")
 
----Add a tool to the tracked list
----@param tool string Tool name to track (e.g. "biome", "eslint")
-function M.add(tool)
-	utils.add_unique_items(tools, { tool })
+---Setup the tools for tracking
+---@param fallbacks table<string, string>
+function M.setup(fallbacks)
+	for k in pairs(fallbacks) do
+		utils.add_unique_items(tools, { k })
+	end
 end
 
 ---Get the list of tracked tools
