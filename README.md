@@ -4,6 +4,23 @@ Resolve project-local CLI tools in Neovim with monorepo-aware logic. (Only for n
 
 > No `plenary`, no guesswork — just fast, reliable resolution of `node_modules/.bin/<tool>` per buffer.
 
+<!-- panvimdoc-ignore-start -->
+
+## 💡 Motivation
+
+I ran into constant version mismatch issues when using tools like biome globally — especially in monorepos or older projects that don’t use the latest version. This often resulted in frustrating errors, even when everything seemed properly set up.
+
+At that point, I had two choices:
+
+- 🚧 Upgrade every project to use the latest tool versions (not always ideal or even possible)
+- ✅ Resolve the tool binary per project, based on its local installation
+
+So, I built this plugin to make the second option easy and seamless.
+
+While tools like mason.nvim are great, they typically install the latest versions globally — which doesn’t help when you need project-specific versions. **tool-resolver.nvim** fills that gap with fast, reliable, and monorepo-aware resolution of `node_modules/.bin/<tool>` for each buffer.
+
+<!-- panvimdoc-ignore-end -->
+
 ## 🚀 Features
 
 - Monorepo-friendly: climbs up directory tree to find local binaries
