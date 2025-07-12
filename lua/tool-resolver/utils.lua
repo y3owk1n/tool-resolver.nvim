@@ -67,4 +67,16 @@ function M.add_unique_items(target_table, items)
 	end
 end
 
+---Check if a value is in a list-like table
+---@param list table<string, string> List to check
+---@param value string Value to check
+function M.contains(list, value)
+	for _, v in ipairs(list) do
+		if v == value then
+			return true
+		end
+	end
+	return false
+end
+
 return M
