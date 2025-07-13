@@ -6,6 +6,7 @@ local resolvers = {
 
 local tools = require("tool-resolver.tools")
 local cache = require("tool-resolver.cache")
+local notify = require("tool-resolver.notify")
 
 ---Resolving tools for specified types. The tool will try to resolve the binary from the current buffer path,
 ---then from cwd if not found, and finally fallback to the configured fallback or tool name.
@@ -18,32 +19,23 @@ function M.get_bin(tool, opts)
 	local registered = tools_table[tool]
 
 	if not registered then
-		vim.notify(
-			"[ToolResolver]: Tool not registered: "
-				.. tool
-				.. ", resolving to the same name",
-			vim.log.levels.WARN
+		notify.warn(
+			("Tool not registered '%s', resolving to the same name"):format(
+				tool
+			)
 		)
 		return tool
 	end
 
 	if not registered.type then
-		vim.notify(
-			"[ToolResolver]: Tool '"
-				.. tool
-				.. "' is missing required 'type' field",
-			vim.log.levels.WARN
-		)
+		notify.warn(("Tool '%s' is missing required 'type' field"):format(tool))
 		return tool
 	end
 
 	local resolver = resolvers[registered.type]
 
 	if not resolver then
-		vim.notify(
-			"[ToolResolver] No resolver for type: " .. registered.type,
-			vim.log.levels.WARN
-		)
+		notify.warn(("No resolver for type '%s'"):format(registered.type))
 		return tool
 	end
 
