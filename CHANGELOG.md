@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/y3owk1n/tool-resolver.nvim/compare/v1.1.1...v1.2.0) (2025-07-13)
+
+
+### Features
+
+* add `ToolResolverGetTools` command & rename `ToolResolverGet` -&gt; `ToolResolverGetTool` ([#16](https://github.com/y3owk1n/tool-resolver.nvim/issues/16)) ([170404d](https://github.com/y3owk1n/tool-resolver.nvim/commit/170404de5661dddde69d5275c557dbe21a1fdf6a))
+
 ## [1.1.1](https://github.com/y3owk1n/tool-resolver.nvim/compare/v1.1.0...v1.1.1) (2025-07-12)
 
 
