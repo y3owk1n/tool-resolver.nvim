@@ -34,7 +34,30 @@ end
 --- Setup user commands for manual control
 ---@private
 local function setup_usercmds()
-	vim.api.nvim_create_user_command("ToolResolverGet", function(opts)
+	vim.api.nvim_create_user_command("ToolResolverGetTools", function()
+		local path = vim.api.nvim_buf_get_name(0)
+
+		local tools_table = require("tool-resolver.tools").get()
+
+		local resolved = {}
+
+		for tool, _ in pairs(tools_table) do
+			local ok, resolved_tool =
+				pcall(require("tool-resolver").get_bin, tool, { path = path })
+			if ok and resolved_tool then
+				resolved[tool] = resolved_tool
+			else
+				resolved[tool] = tool
+			end
+		end
+
+		vim.notify(
+			("[ToolResolver]: Resolved tools:\n" .. vim.inspect(resolved)),
+			vim.log.levels.INFO
+		)
+	end, {})
+
+	vim.api.nvim_create_user_command("ToolResolverGetTool", function(opts)
 		local tool = opts.args
 		local path = vim.api.nvim_buf_get_name(0)
 
