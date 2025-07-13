@@ -1,9 +1,12 @@
 ---@module "tool-resolver"
 
+local config = require("tool-resolver.config")
+local resolvers = require("tool-resolver.resolvers")
+
 local M = {}
 
-M.setup = require("tool-resolver.config").setup
+M.setup = config.setup
 
-M.get_bin = require("tool-resolver.resolvers").get_bin
+M.get_bin = resolvers.get_bin
 
 return M

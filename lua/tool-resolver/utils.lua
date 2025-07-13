@@ -1,5 +1,7 @@
 local M = {}
 
+local fn = vim.fn
+
 ---Join multiple path segments safely and normalize the result
 ---@param ... string Path parts to join
 ---@return string Normalized absolute path
@@ -19,7 +21,7 @@ end
 ---@param path string path to check
 ---@return boolean
 function M.is_executable(path)
-	return vim.fn.filereadable(path) == 1 and vim.fn.executable(path) == 1
+	return fn.filereadable(path) == 1 and fn.executable(path) == 1
 end
 
 ---Add unique items to a list-like table
