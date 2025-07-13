@@ -1,5 +1,7 @@
 local M = {}
 
+local notify = require("tool-resolver.notify")
+
 ---User-provided config, merged with defaults
 ---@type ToolResolver.Config
 M.config = {}
@@ -51,10 +53,7 @@ local function setup_usercmds()
 			end
 		end
 
-		vim.notify(
-			("[ToolResolver]: Resolved tools:\n" .. vim.inspect(resolved)),
-			vim.log.levels.INFO
-		)
+		notify.info(("Resolved tools:\n%s"):format(vim.inspect(resolved)))
 	end, {})
 
 	vim.api.nvim_create_user_command("ToolResolverGetTool", function(opts)
@@ -65,13 +64,10 @@ local function setup_usercmds()
 		local registered = tools_table[tool]
 
 		if not registered then
-			vim.notify(
-				(
-					"[ToolResolver]: Tool not registered: "
-					.. tool
-					.. ", resolving to the same name"
-				),
-				vim.log.levels.WARN
+			notify.warn(
+				("Tool not registered: %s, resolving to the same name"):format(
+					tool
+				)
 			)
 			return
 		end
@@ -79,18 +75,9 @@ local function setup_usercmds()
 		local ok, resolved =
 			pcall(require("tool-resolver").get_bin, tool, { path = path })
 		if ok and resolved then
-			vim.notify(
-				("[ToolResolver]: Resolved tool '%s': %s"):format(
-					tool,
-					resolved
-				),
-				vim.log.levels.INFO
-			)
+			notify.info(("Resolved tool '%s': %s"):format(tool, resolved))
 		else
-			vim.notify(
-				("[ToolResolver]: Failed to resolve tool '%s'"):format(tool),
-				vim.log.levels.WARN
-			)
+			notify.warn(("Failed to resolve tool '%s'"):format(tool))
 		end
 	end, {
 		nargs = 1,
@@ -106,18 +93,12 @@ local function setup_usercmds()
 
 	vim.api.nvim_create_user_command("ToolResolverClearCache", function()
 		require("tool-resolver.cache").clear()
-		vim.notify(
-			"[ToolResolver]: Tool resolver cache cleared",
-			vim.log.levels.INFO
-		)
+		notify.info("Tool resolver cache cleared")
 	end, {})
 
 	vim.api.nvim_create_user_command("ToolResolverGetCache", function()
 		local cache = require("tool-resolver.cache").get()
-		vim.notify(
-			"[ToolResolver]: Cached data:\n" .. vim.inspect(cache),
-			vim.log.levels.INFO
-		)
+		notify.info(("Cached data:\n%s"):format(vim.inspect(cache)))
 	end, {})
 end
 
