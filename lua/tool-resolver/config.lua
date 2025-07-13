@@ -1,6 +1,12 @@
 local M = {}
 
 local notify = require("tool-resolver.notify")
+local tools = require("tool-resolver.tools")
+local cache = require("tool-resolver.cache")
+local resolvers = require("tool-resolver.resolvers")
+
+local api = vim.api
+local inspect = vim.inspect
 
 ---User-provided config, merged with defaults
 ---@type ToolResolver.Config
@@ -14,20 +20,20 @@ local defaults = {
 --- Setup autocmds to automatically resolve tools
 ---@private
 local function setup_autocmds()
-	vim.api.nvim_create_autocmd("DirChanged", {
+	api.nvim_create_autocmd("DirChanged", {
 		callback = function()
-			require("tool-resolver.cache").clear()
+			cache.clear()
 		end,
 	})
 
-	vim.api.nvim_create_autocmd("BufEnter", {
+	api.nvim_create_autocmd("BufEnter", {
 		callback = function(args)
-			local path = vim.api.nvim_buf_get_name(args.buf)
+			local path = api.nvim_buf_get_name(args.buf)
 
-			local tools_table = require("tool-resolver.tools").get()
+			local tools_table = tools.get()
 
 			for _, tool in ipairs(tools_table) do
-				require("tool-resolver").get_bin(tool, { path = path })
+				resolvers.get_bin(tool, { path = path })
 			end
 		end,
 	})
@@ -36,16 +42,16 @@ end
 --- Setup user commands for manual control
 ---@private
 local function setup_usercmds()
-	vim.api.nvim_create_user_command("ToolResolverGetTools", function()
-		local path = vim.api.nvim_buf_get_name(0)
+	api.nvim_create_user_command("ToolResolverGetTools", function()
+		local path = api.nvim_buf_get_name(0)
 
-		local tools_table = require("tool-resolver.tools").get()
+		local tools_table = tools.get()
 
 		local resolved = {}
 
 		for tool, _ in pairs(tools_table) do
 			local ok, resolved_tool =
-				pcall(require("tool-resolver").get_bin, tool, { path = path })
+				pcall(resolvers.get_bin, tool, { path = path })
 			if ok and resolved_tool then
 				resolved[tool] = resolved_tool
 			else
@@ -53,14 +59,14 @@ local function setup_usercmds()
 			end
 		end
 
-		notify.info(("Resolved tools:\n%s"):format(vim.inspect(resolved)))
+		notify.info(("Resolved tools:\n%s"):format(inspect(resolved)))
 	end, {})
 
-	vim.api.nvim_create_user_command("ToolResolverGetTool", function(opts)
+	api.nvim_create_user_command("ToolResolverGetTool", function(opts)
 		local tool = opts.args
-		local path = vim.api.nvim_buf_get_name(0)
+		local path = api.nvim_buf_get_name(0)
 
-		local tools_table = require("tool-resolver.tools").get()
+		local tools_table = tools.get()
 		local registered = tools_table[tool]
 
 		if not registered then
@@ -72,8 +78,7 @@ local function setup_usercmds()
 			return
 		end
 
-		local ok, resolved =
-			pcall(require("tool-resolver").get_bin, tool, { path = path })
+		local ok, resolved = pcall(resolvers.get_bin, tool, { path = path })
 		if ok and resolved then
 			notify.info(("Resolved tool '%s': %s"):format(tool, resolved))
 		else
@@ -82,8 +87,8 @@ local function setup_usercmds()
 	end, {
 		nargs = 1,
 		complete = function(arg)
-			local tools = require("tool-resolver.tools").get()
-			return vim.iter(vim.tbl_keys(tools))
+			local tools_table = tools.get()
+			return vim.iter(vim.tbl_keys(tools_table))
 				:filter(function(name)
 					return name:sub(1, #arg) == arg
 				end)
@@ -91,14 +96,14 @@ local function setup_usercmds()
 		end,
 	})
 
-	vim.api.nvim_create_user_command("ToolResolverClearCache", function()
-		require("tool-resolver.cache").clear()
+	api.nvim_create_user_command("ToolResolverClearCache", function()
+		cache.clear()
 		notify.info("Tool resolver cache cleared")
 	end, {})
 
-	vim.api.nvim_create_user_command("ToolResolverGetCache", function()
-		local cache = require("tool-resolver.cache").get()
-		notify.info(("Cached data:\n%s"):format(vim.inspect(cache)))
+	api.nvim_create_user_command("ToolResolverGetCache", function()
+		local cache_data = cache.get()
+		notify.info(("Cached data:\n%s"):format(inspect(cache_data)))
 	end, {})
 end
 
