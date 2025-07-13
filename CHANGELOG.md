@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.3.0](https://github.com/y3owk1n/tool-resolver.nvim/compare/v1.2.0...v1.3.0) (2025-07-13)
+
+
+### Features
+
+* **cache:** switch to per-root bulk cache and fs watcher ([#22](https://github.com/y3owk1n/tool-resolver.nvim/issues/22)) ([96ad555](https://github.com/y3owk1n/tool-resolver.nvim/commit/96ad555d05733b3cfff01cb9b41f878e3938975e))
+
+
+### Performance Improvements
+
+* cache imports whenever possible ([#20](https://github.com/y3owk1n/tool-resolver.nvim/issues/20)) ([c3327c7](https://github.com/y3owk1n/tool-resolver.nvim/commit/c3327c75c1d41bae3dac7cc4aabc0e1734626a3d))
+
 ## [1.2.0](https://github.com/y3owk1n/tool-resolver.nvim/compare/v1.1.1...v1.2.0) (2025-07-13)
 
 
