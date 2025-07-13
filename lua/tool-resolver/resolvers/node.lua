@@ -2,29 +2,44 @@ local M = {}
 
 local utils = require("tool-resolver.utils")
 
----Find the nearest executable binary in node_modules/.bin
----Searches upward from a starting path
----@param tool string Tool name (e.g., "biome")
----@param start_path string Starting path for upward search
----@return string? bin_path The resolved binary path if found
----@return string? root_path The project root where the binary was found
-function M.resolve(tool, start_path)
-	local dir = vim.fn.fnamemodify(start_path, ":p"):gsub("/+$", "")
+---@type ToolResolver.ResolverMeta
+M.meta = {
+	root_markers = { "package.json" },
+	bin_subpath = { "node_modules", ".bin" },
+}
 
-	while dir and dir ~= "/" do
-		local candidate = utils.join(dir, "node_modules", ".bin", tool)
-		if utils.is_executable(candidate) then
-			return candidate, dir
-		end
+---Find an individual binary *given the exact root*
+---@param tool string
+---@param root string  -- already known project root
+---@return string? bin_path
+function M.resolve(tool, root)
+	local path = utils.join(root, unpack(M.meta.bin_subpath), tool)
+	return utils.is_executable(path) and path or nil
+end
 
-		local parent = vim.fn.fnamemodify(dir, ":h")
-		if parent == dir then
-			break -- prevent infinite loop
+---Scan the node_modules/.bin directory for binaries
+---@param root string Root directory
+---@param meta ToolResolver.ResolverMeta
+---@return table<string, string> Binary map
+function M.scan(root, meta)
+	local uv = vim.uv or vim.loop
+	local parts = meta.bin_subpath
+	local bin_dir = root .. "/" .. table.concat(parts, "/")
+
+	local fs = uv.fs_scandir(bin_dir)
+	local map = {}
+	if fs then
+		while true do
+			local name, t = uv.fs_scandir_next(fs)
+			if not name then
+				break
+			end
+			if t == "file" or t == "link" then
+				map[name] = bin_dir .. "/" .. name
+			end
 		end
-		dir = parent:gsub("/+$", "")
 	end
-
-	return nil, nil
+	return map
 end
 
 return M
