@@ -2,7 +2,6 @@ local M = {}
 
 local notify = require("tool-resolver.notify")
 local tools = require("tool-resolver.tools")
-local cache = require("tool-resolver.cache")
 local resolvers = require("tool-resolver.resolvers")
 
 local api = vim.api
@@ -20,20 +19,26 @@ local defaults = {
 --- Setup autocmds to automatically resolve tools
 ---@private
 local function setup_autocmds()
-	api.nvim_create_autocmd("DirChanged", {
-		callback = function()
-			cache.clear()
-		end,
-	})
-
-	api.nvim_create_autocmd("BufEnter", {
+	api.nvim_create_autocmd({ "BufEnter", "DirChanged" }, {
 		callback = function(args)
-			local path = api.nvim_buf_get_name(args.buf)
-
 			local tools_table = tools.get()
+			for tool, registered in pairs(tools_table) do
+				if not registered.type then
+					notify.warn(
+						("Tool '%s' is missing required 'type' field"):format(
+							tool
+						)
+					)
+					return
+				end
 
-			for _, tool in ipairs(tools_table) do
-				resolvers.get_bin(tool, { path = path })
+				local meta = resolvers.resolvers[registered.type].meta
+				if meta then
+					local root = vim.fs.root(args.buf or 0, meta.root_markers)
+					if root then
+						resolvers.prewarm_root(root, registered.type)
+					end
+				end
 			end
 		end,
 	})
@@ -95,16 +100,6 @@ local function setup_usercmds()
 				:totable()
 		end,
 	})
-
-	api.nvim_create_user_command("ToolResolverClearCache", function()
-		cache.clear()
-		notify.info("Tool resolver cache cleared")
-	end, {})
-
-	api.nvim_create_user_command("ToolResolverGetCache", function()
-		local cache_data = cache.get()
-		notify.info(("Cached data:\n%s"):format(inspect(cache_data)))
-	end, {})
 end
 
 --- Plugin setup entry point

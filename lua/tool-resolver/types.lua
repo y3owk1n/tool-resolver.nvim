@@ -9,3 +9,7 @@
 ---@field path? string start search path (default: current buffer)
 
 ---@alias ToolResolver.ResolverType "node" -- add more in future
+
+---@class ToolResolver.ResolverMeta
+---@field root_markers string[] root_markers
+---@field bin_subpath string[] bin_subpath
