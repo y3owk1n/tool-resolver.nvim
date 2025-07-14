@@ -66,14 +66,26 @@ function M.get_bin(tool, opts)
 	end
 
 	local root_markers = resolver.meta.root_markers
-	local root = vim.fs.root(buf_path, root_markers) or vim.fn.getcwd()
+
+	-- If in monorepo, try to get the packages root first
+	local root = vim.fs.root(buf_path, root_markers)
 
 	local bin = cache.get_bin(root, tool)
-	if bin then
+
+	if not bin then
+		-- Try `.git` as project root or resolve to cwd
+		root = vim.fs.root(buf_path, ".git") or vim.fn.getcwd()
+		bin = cache.get_bin(root, tool)
+
+		if bin then
+			return bin == false and nil or bin
+		end
+	else
 		return bin == false and nil or bin
 	end
 
 	bin = resolver.resolve(tool, root)
+
 	local result = bin or (registered.fallback or tool)
 
 	local meta = resolver.meta
