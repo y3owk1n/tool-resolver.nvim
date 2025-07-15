@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.2](https://github.com/y3owk1n/tool-resolver.nvim/compare/v1.3.1...v1.3.2) (2025-07-15)
+
+
+### Bug Fixes
+
+* **resolver:** move generic function out from language specific resolver ([#25](https://github.com/y3owk1n/tool-resolver.nvim/issues/25)) ([7cb47c0](https://github.com/y3owk1n/tool-resolver.nvim/commit/7cb47c06fafa0eedf2ad1595f1074d9c9b6c1a3c))
+* **resolver:** remove usage of `unpack` and use custom join method ([#27](https://github.com/y3owk1n/tool-resolver.nvim/issues/27)) ([24783e0](https://github.com/y3owk1n/tool-resolver.nvim/commit/24783e05faaa759c5cfad141688ce0ad8b0e7343))
+
 ## [1.3.1](https://github.com/y3owk1n/tool-resolver.nvim/compare/v1.3.0...v1.3.1) (2025-07-14)
 
 
