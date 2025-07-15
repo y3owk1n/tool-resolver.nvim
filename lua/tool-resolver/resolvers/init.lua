@@ -111,11 +111,12 @@ function M.get_bin(tool, opts)
 		return bin == false and nil or bin
 	end
 
-	bin = utils.exists_in_root(tool, root, resolver.meta.bin_subpath)
+	local meta = resolver.meta
+
+	bin = utils.exists_in_root(tool, root, meta.bin_subpath)
 
 	local result = bin or (registered.fallback or tool)
 
-	local meta = resolver.meta
 	local tool_map = cache.get_root_table(root) or {}
 
 	tool_map[tool] = result -- only store actual paths
