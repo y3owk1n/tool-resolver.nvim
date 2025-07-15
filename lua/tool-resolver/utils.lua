@@ -3,14 +3,13 @@ local M = {}
 local fn = vim.fn
 
 ---Join multiple path segments safely and normalize the result
----@param ... string Path parts to join
+---@param parts string[] Path segments
 ---@return string Normalized absolute path
-function M.join(...)
-	local args = { ... }
-	local result = args[1]:gsub("/+$", "")
+function M.join(parts)
+	local result = parts[1]:gsub("/+$", "")
 
-	for i = 2, #args do
-		local part = args[i]:gsub("^/+", ""):gsub("/+$", "")
+	for i = 2, #parts do
+		local part = parts[i]:gsub("^/+", ""):gsub("/+$", "")
 		result = result .. "/" .. part
 	end
 
@@ -62,8 +61,28 @@ end
 ---@param bin_subpath string[] bin sub-path to check
 ---@return string|nil is_executable absolute path if executable, nil otherwise
 function M.exists_in_root(tool, root, bin_subpath)
-	local path = M.join(root, unpack(bin_subpath), tool)
+	local path_parts = M.create_path_parts(tool, root, bin_subpath)
+
+	local path = M.join(path_parts)
+
 	return M.is_executable(path) and path or nil
+end
+
+---Create a path from a tool name, root, and bin_subpath
+---@param tool string
+---@param root string
+---@param bin_subpath string[]
+---@return string[] path_parts
+function M.create_path_parts(tool, root, bin_subpath)
+	local path_parts = { root }
+
+	for _, segment in ipairs(bin_subpath) do
+		table.insert(path_parts, segment)
+	end
+
+	table.insert(path_parts, tool)
+
+	return path_parts
 end
 
 return M
