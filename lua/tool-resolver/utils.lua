@@ -56,4 +56,14 @@ function M.contains(list, value)
 	return false
 end
 
+---Check whether the given tool exists *inside the supplied root*
+---@param tool string
+---@param root string already determined project root
+---@param bin_subpath string[] bin sub-path to check
+---@return string|nil is_executable absolute path if executable, nil otherwise
+function M.exists_in_root(tool, root, bin_subpath)
+	local path = M.join(root, unpack(bin_subpath), tool)
+	return M.is_executable(path) and path or nil
+end
+
 return M
