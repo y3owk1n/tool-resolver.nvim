@@ -1,4 +1,4 @@
----@mod tool-resolver.types Types
+---@mod tool-resolver.nvim.types Types
 ---
 
 local M = {}

@@ -1,4 +1,4 @@
----@mod tool-resolver.config Configurations
+---@mod tool-resolver.nvim.config Configurations
 ---@brief [[
 ---
 ---Example Configuration:

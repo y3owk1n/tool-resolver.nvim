@@ -1,25 +1,25 @@
-*tool-resolver.txt*
+*tool-resolver.nvim.txt*
 
 Resolve project-local CLI tools in Neovim with monorepo-aware logic.
 
 ==============================================================================
-Table of Contents                                            *tool-resolver.toc*
+Table of Contents                                       *tool-resolver.nvim.toc*
 
-API ························································ |tool-resolver.api|
-Configurations ·········································· |tool-resolver.config|
-Types ···················································· |tool-resolver.types|
+API ··················································· |tool-resolver.nvim.api|
+Configurations ····································· |tool-resolver.nvim.config|
+Types ··············································· |tool-resolver.nvim.types|
 
 ==============================================================================
-API                                                          *tool-resolver.api*
+API                                                     *tool-resolver.nvim.api*
 
-M.setup                                                *tool-resolver.api.setup*
+M.setup                                           *tool-resolver.nvim.api.setup*
     Entry point to setup the plugin
 
     Type: ~
         (fun(user_config?:ToolResolver.Config))
 
 
-M.get_bin                                            *tool-resolver.api.get_bin*
+M.get_bin                                       *tool-resolver.nvim.api.get_bin*
     Resolving tools for specified types. The tool will try to resolve the binary from the current buffer path,
     then from cwd if not found, and finally fallback to the configured fallback or tool name.
 
@@ -28,7 +28,7 @@ M.get_bin                                            *tool-resolver.api.get_bin*
 
 
 ==============================================================================
-Configurations                                            *tool-resolver.config*
+Configurations                                       *tool-resolver.nvim.config*
 
 
 Example Configuration:
@@ -49,7 +49,7 @@ Example Configuration:
 <
 
 
-M.config                                           *tool-resolver.config.config*
+M.config                                      *tool-resolver.nvim.config.config*
     User-provided config, merged with defaults
 
     Type: ~
@@ -57,16 +57,17 @@ M.config                                           *tool-resolver.config.config*
 
 
 ==============================================================================
-Types                                                      *tool-resolver.types*
+Types                                                 *tool-resolver.nvim.types*
 
-ToolResolver.Config                    *tool-resolver.types.ToolResolver.Config*
+                                  *tool-resolver.nvim.types.ToolResolver.Config*
+ToolResolver.Config
     Config
 
     Fields: ~
         {tools}  (table<string,ToolResolver.Config.Tools>)  tools with type and fallback
 
 
-                                 *tool-resolver.types.ToolResolver.Config.Tools*
+                            *tool-resolver.nvim.types.ToolResolver.Config.Tools*
 ToolResolver.Config.Tools
     Config Tools
 
@@ -75,7 +76,7 @@ ToolResolver.Config.Tools
         {fallback?}  (string)                     fallback binary name, if not specified then use the key.
 
 
-                                   *tool-resolver.types.ToolResolver.GetBinOpts*
+                              *tool-resolver.nvim.types.ToolResolver.GetBinOpts*
 ToolResolver.GetBinOpts
     `get_bin` options
 
@@ -83,7 +84,7 @@ ToolResolver.GetBinOpts
         {path?}  (string)  start search path (default: current buffer)
 
 
-                                 *tool-resolver.types.ToolResolver.ResolverType*
+                            *tool-resolver.nvim.types.ToolResolver.ResolverType*
 ToolResolver.ResolverType
     Resolver types
 
@@ -91,7 +92,7 @@ ToolResolver.ResolverType
         ("node")  node-based resolver (e.g. using node_modules)
 
 
-                                 *tool-resolver.types.ToolResolver.ResolverMeta*
+                            *tool-resolver.nvim.types.ToolResolver.ResolverMeta*
 ToolResolver.ResolverMeta
     Resolver metadata
 
