@@ -1,3 +1,25 @@
+---@mod tool-resolver.config Configurations
+---@brief [[
+---
+---Example Configuration:
+---
+--->
+---{
+---   -- register the tools that you want to use here
+---   tools = {
+---    biome = {
+---     type = "node", -- type is required, and only "node" is supported for now
+---    },
+---    prettier = {
+---     type = "node", -- type is required, and only "node" is supported for now
+---     fallback = "prettierd", -- specify a fallback binary name will resolve to this, else will fallback to the key `prettier`
+---    },
+---  },
+---}
+---<
+---
+---@brief ]]
+
 local M = {}
 
 local notify = require("tool-resolver.notify")
@@ -11,6 +33,7 @@ local inspect = vim.inspect
 ---@type ToolResolver.Config
 M.config = {}
 
+---@private
 ---@type ToolResolver.Config
 local defaults = {
 	tools = {},
@@ -102,7 +125,8 @@ local function setup_usercmds()
 	})
 end
 
---- Plugin setup entry point
+---@private
+---Plugin setup entry point
 ---@param user_config? ToolResolver.Config
 function M.setup(user_config)
 	M.config = vim.tbl_deep_extend("force", defaults, user_config or {})

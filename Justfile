@@ -1,5 +1,13 @@
 doc:
-    panvimdoc --project-name tool-resolver.nvim --input-file ./README.md --demojify true --vim-version "Neovim >= 0.11.0"
+    rm -rf doc/tool-resolver.nvim.txt
+
+    vimcats -t -f -c -a \
+    lua/tool-resolver/init.lua \
+    lua/tool-resolver/config.lua \
+    lua/tool-resolver/types.lua \
+    > doc/tool-resolver.txt
+
+    nvim --headless -c "helptags doc" -c "q"
 
 set shell := ["bash", "-cu"]
 
