@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.3.2](https://github.com/y3owk1n/tool-resolver.nvim/compare/v1.3.1...v1.3.2) (2025-07-20)
+
+
+### Bug Fixes
+
+* **docs:** ensure naming consistency ([#30](https://github.com/y3owk1n/tool-resolver.nvim/issues/30)) ([1c21101](https://github.com/y3owk1n/tool-resolver.nvim/commit/1c2110147dd01fa6ae67a32c8a12eefc4633c689))
+* **docs:** remove helptags ([#29](https://github.com/y3owk1n/tool-resolver.nvim/issues/29)) ([569d5cd](https://github.com/y3owk1n/tool-resolver.nvim/commit/569d5cdb1c534bfd99ba32739c08ee4a5b47a86d))
+* **docs:** switch from `pandocvim` to `vimcats` for docs generation ([#28](https://github.com/y3owk1n/tool-resolver.nvim/issues/28)) ([24a8806](https://github.com/y3owk1n/tool-resolver.nvim/commit/24a88060b34eeae69ee5223df9b6ebb448cd5c27))
+* remove whitespace ([#31](https://github.com/y3owk1n/tool-resolver.nvim/issues/31)) ([0f55cbf](https://github.com/y3owk1n/tool-resolver.nvim/commit/0f55cbfa7329c4bfd3e4457f61fc54aed28b1c79))
+* **resolver:** move generic function out from language specific resolver ([#25](https://github.com/y3owk1n/tool-resolver.nvim/issues/25)) ([7cb47c0](https://github.com/y3owk1n/tool-resolver.nvim/commit/7cb47c06fafa0eedf2ad1595f1074d9c9b6c1a3c))
+* **resolver:** remove usage of `unpack` and use custom join method ([#27](https://github.com/y3owk1n/tool-resolver.nvim/issues/27)) ([24783e0](https://github.com/y3owk1n/tool-resolver.nvim/commit/24783e05faaa759c5cfad141688ce0ad8b0e7343))
+
 ## [1.3.1](https://github.com/y3owk1n/tool-resolver.nvim/compare/v1.3.0...v1.3.1) (2025-07-14)
 
 
