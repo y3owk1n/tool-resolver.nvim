@@ -1,11 +1,9 @@
 doc:
-    rm -rf doc/tool-resolver.nvim.txt
-
     vimcats -t -f -c -a \
     lua/tool-resolver/init.lua \
     lua/tool-resolver/config.lua \
     lua/tool-resolver/types.lua \
-    > doc/tool-resolver.txt
+    > doc/tool-resolver.nvim.txt
 
     nvim --headless -c "helptags doc" -c "q"
 
