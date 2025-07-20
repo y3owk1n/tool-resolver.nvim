@@ -1,0 +1,13 @@
+tool-resolver.api	tool-resolver.nvim.txt	/*tool-resolver.api*
+tool-resolver.api.get_bin	tool-resolver.nvim.txt	/*tool-resolver.api.get_bin*
+tool-resolver.api.setup	tool-resolver.nvim.txt	/*tool-resolver.api.setup*
+tool-resolver.config	tool-resolver.nvim.txt	/*tool-resolver.config*
+tool-resolver.config.config	tool-resolver.nvim.txt	/*tool-resolver.config.config*
+tool-resolver.toc	tool-resolver.nvim.txt	/*tool-resolver.toc*
+tool-resolver.txt	tool-resolver.nvim.txt	/*tool-resolver.txt*
+tool-resolver.types	tool-resolver.nvim.txt	/*tool-resolver.types*
+tool-resolver.types.ToolResolver.Config	tool-resolver.nvim.txt	/*tool-resolver.types.ToolResolver.Config*
+tool-resolver.types.ToolResolver.Config.Tools	tool-resolver.nvim.txt	/*tool-resolver.types.ToolResolver.Config.Tools*
+tool-resolver.types.ToolResolver.GetBinOpts	tool-resolver.nvim.txt	/*tool-resolver.types.ToolResolver.GetBinOpts*
+tool-resolver.types.ToolResolver.ResolverMeta	tool-resolver.nvim.txt	/*tool-resolver.types.ToolResolver.ResolverMeta*
+tool-resolver.types.ToolResolver.ResolverType	tool-resolver.nvim.txt	/*tool-resolver.types.ToolResolver.ResolverType*

@@ -1,166 +1,103 @@
-*tool-resolver.nvim.txt*     For Neovim >= 0.11.0    Last change: 2025 July 15
+*tool-resolver.txt*
+
+Resolve project-local CLI tools in Neovim with monorepo-aware logic.
 
 ==============================================================================
-Table of Contents                       *tool-resolver.nvim-table-of-contents*
+Table of Contents                                            *tool-resolver.toc*
 
-1. tool-resolver.nvim                  |tool-resolver.nvim-tool-resolver.nvim|
-  - Features                  |tool-resolver.nvim-tool-resolver.nvim-features|
-  - How It Works          |tool-resolver.nvim-tool-resolver.nvim-how-it-works|
-  - Installation          |tool-resolver.nvim-tool-resolver.nvim-installation|
-  - Configuration        |tool-resolver.nvim-tool-resolver.nvim-configuration|
-  - Quick Start            |tool-resolver.nvim-tool-resolver.nvim-quick-start|
-  - API                            |tool-resolver.nvim-tool-resolver.nvim-api|
+API ························································ |tool-resolver.api|
+Configurations ·········································· |tool-resolver.config|
+Types ···················································· |tool-resolver.types|
 
 ==============================================================================
-1. tool-resolver.nvim                  *tool-resolver.nvim-tool-resolver.nvim*
+API                                                          *tool-resolver.api*
 
-Resolve project-local CLI tools in Neovim with monorepo-aware logic. Say bye to
-version mismatches!
+M.setup                                                *tool-resolver.api.setup*
+    Entry point to setup the plugin
 
-
-FEATURES                      *tool-resolver.nvim-tool-resolver.nvim-features*
-
-- Monorepo-friendly: climbs up directory tree to find local binaries
-- Falls back to monorepo root if needed
-- Global fallback to system binary if no local match
-- Smart per-buffer resolution (works as you switch files)
-- Lightweight, dependency-free
+    Type: ~
+        (fun(user_config?:ToolResolver.Config))
 
 
-  [!NOTE] This plugin currently only supports node projects, feel free to
-  contribute for more language resolvers if this plugin interests you.
+M.get_bin                                            *tool-resolver.api.get_bin*
+    Resolving tools for specified types. The tool will try to resolve the binary from the current buffer path,
+    then from cwd if not found, and finally fallback to the configured fallback or tool name.
 
-HOW IT WORKS              *tool-resolver.nvim-tool-resolver.nvim-how-it-works*
-
-When resolving a tool (e.g. `biome`), this plugin:
-
-1. Starts at the file’s directory
-2. Traverses upward to find the nearest executable based on configured type, for `node` it will be at `node_modules/.bin/biome`
-3. If none is found, tries the same logic from `vim.fn.getcwd()` (monorepo root fallback)
-4. If still not found, falls back to the fallbacks tool name specified in configuration or the global tool name (e.g. "biome")
+    Type: ~
+        (fun(tool:string,opts?:ToolResolver.GetBinOpts):string)  -- references the signature from resolvers.get_bin
 
 
-INSTALLATION              *tool-resolver.nvim-tool-resolver.nvim-installation*
-
-Using lazy.nvim <https://github.com/folke/lazy.nvim>
-
->lua
-    -- tool-resolver.lua
-    return {
-     "y3owk1n/tool-resolver.nvim",
-     version = "*", -- remove this if you want to use the `main` branch
-     opts = {
-      -- your configuration comes here
-      -- or leave it empty to use the default settings
-      -- refer to the configuration section below
-     }
-    }
-<
-
-Ifyou are using other package managers you need to call `setup`
-
->lua
-    require("tool-resolver").setup({
-      -- your configuration
-    })
-<
+==============================================================================
+Configurations                                            *tool-resolver.config*
 
 
-REQUIREMENTS ~
+Example Configuration:
 
-- Neovim0.11+ with Lua support
-
-
-CONFIGURATION            *tool-resolver.nvim-tool-resolver.nvim-configuration*
-
-The default configurations are as below.
-
-
-DEFAULT OPTIONS ~
-
->lua
-    ---@type ToolResolver.Config
-    {
-     tools = {},
-    }
-<
-
-
-TYPE DEFINITIONS ~
-
->lua
-    ---@class ToolResolver.Config
-    ---@field tools table<string, ToolResolver.Config.Tools> tools with type and fallback
-    
-    ---@class ToolResolver.Config.Tools
-    ---@field type ToolResolver.ResolverType
-    ---@field fallback? string fallback binary name, if not specified then use the key.
-<
-
-
-QUICK START                *tool-resolver.nvim-tool-resolver.nvim-quick-start*
-
-See the example below for how to configure **tool-resolver.nvim**.
-
->lua
-    {
-     "y3owk1n/tool-resolver.nvim",
-     cmd = {
-      "ToolResolverGetTool",
-      "ToolResolverGetTools",
-     },
-     ---@type ToolResolver.Config
-     opts = {
-       -- register the tools that you want to use here
-       tools = {
-        biome = {
-         type = "node", -- type is required, and only "node" is supported for now
-        },
-        prettier = {
-         type = "node", -- type is required, and only "node" is supported for now
-         fallback = "prettierd", -- specify a fallback binary name will resolve to this, else will fallback to the key `prettier`
-        },
-       },
-     },
+>
+{
+   -- register the tools that you want to use here
+   tools = {
+    biome = {
+     type = "node", -- type is required, and only "node" is supported for now
     },
-<
-
-You can then use the following to resolve a tool anywhere. For example in my
-biome LSP config:
-
->lua
-    local tr = require("tool-resolver")
-    
-    ---@type vim.lsp.Config
-    return {
-     cmd = { tr.get_bin("biome"), "lsp-proxy" }, -- instead of just getting it from the global bin, use tool-resolver for it.
-     -- the rest of your lsp configurations
-    }
+    prettier = {
+     type = "node", -- type is required, and only "node" is supported for now
+     fallback = "prettierd", -- specify a fallback binary name will resolve to this, else will fallback to the key `prettier`
+    },
+  },
+}
 <
 
 
-API                                *tool-resolver.nvim-tool-resolver.nvim-api*
+M.config                                           *tool-resolver.config.config*
+    User-provided config, merged with defaults
 
-**tool-resolver.nvim** provides the following api functions that you can use
-for different things:
+    Type: ~
+        (ToolResolver.Config)
 
 
-GET THE LOCAL OR GLOBAL TOOL BIN ~
+==============================================================================
+Types                                                      *tool-resolver.types*
 
-This is the most important function in **tool-resolver.nvim**. It will try to
-resolve the tool bin from the current buffer to the node modules available
-binary, and only fallback to the globally installed version.
+ToolResolver.Config                    *tool-resolver.types.ToolResolver.Config*
+    Config
 
->lua
-    ---@class ToolResolver.GetBinOpts
-    ---@field path? string start search path (default: current buffer)
-    
-    ---@param tool string
-    ---@param opts? ToolResolver.GetBinOpts
-    ---@return string
-    require("tool-resolver").get_bin(tool, opts)
-<
+    Fields: ~
+        {tools}  (table<string,ToolResolver.Config.Tools>)  tools with type and fallback
 
-Generated by panvimdoc <https://github.com/kdheepak/panvimdoc>
+
+                                 *tool-resolver.types.ToolResolver.Config.Tools*
+ToolResolver.Config.Tools
+    Config Tools
+
+    Fields: ~
+        {type}       (ToolResolver.ResolverType)
+        {fallback?}  (string)                     fallback binary name, if not specified then use the key.
+
+
+                                   *tool-resolver.types.ToolResolver.GetBinOpts*
+ToolResolver.GetBinOpts
+    `get_bin` options
+
+    Fields: ~
+        {path?}  (string)  start search path (default: current buffer)
+
+
+                                 *tool-resolver.types.ToolResolver.ResolverType*
+ToolResolver.ResolverType
+    Resolver types
+
+    Variants: ~
+        ("node")  node-based resolver (e.g. using node_modules)
+
+
+                                 *tool-resolver.types.ToolResolver.ResolverMeta*
+ToolResolver.ResolverMeta
+    Resolver metadata
+
+    Fields: ~
+        {root_markers}  (string[])  root_markers
+        {bin_subpath}   (string[])  bin_subpath
+
 
 vim:tw=78:ts=8:noet:ft=help:norl:
