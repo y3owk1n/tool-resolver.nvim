@@ -5,8 +5,6 @@ doc:
     lua/tool-resolver/types.lua \
     > doc/tool-resolver.nvim.txt
 
-    vim -c "helptags doc" -c "q"
-
 set shell := ["bash", "-cu"]
 
 test:
