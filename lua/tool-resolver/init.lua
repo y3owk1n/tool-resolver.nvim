@@ -1,14 +1,14 @@
 ---@module "tool-resolver"
 
 ---@brief [[
----*tool-resolver.txt*
+---*tool-resolver.nvim.txt*
 ---
 ---Resolve project-local CLI tools in Neovim with monorepo-aware logic.
 ---@brief ]]
 
----@toc tool-resolver.toc
+---@toc tool-resolver.nvim.toc
 
----@mod tool-resolver.api API
+---@mod tool-resolver.nvim.api API
 
 local config = require("tool-resolver.config")
 local resolvers = require("tool-resolver.resolvers")
