@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.3](https://github.com/y3owk1n/tool-resolver.nvim/compare/v1.3.2...v1.3.3) (2025-08-10)
+
+
+### Bug Fixes
+
+* **ci:** move docs to its own workflow ([#33](https://github.com/y3owk1n/tool-resolver.nvim/issues/33)) ([38af0fb](https://github.com/y3owk1n/tool-resolver.nvim/commit/38af0fb121ffc8812052210c13d995bafc168401))
+
 ## [1.3.2](https://github.com/y3owk1n/tool-resolver.nvim/compare/v1.3.1...v1.3.2) (2025-07-20)
 
 
